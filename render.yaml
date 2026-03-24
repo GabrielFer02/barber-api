@@ -15,7 +15,7 @@ services:
     name: gobarber-api
     env: node
     plan: free
-    buildCommand: npm install && npm run build && npm run db:migrate
+    buildCommand: npm install --include=dev && npm run build && npm run db:migrate
     startCommand: npm start
     envVars:
       - key: NODE_ENV
