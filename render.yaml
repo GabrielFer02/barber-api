@@ -1,0 +1,51 @@
+databases:
+  - name: gobarber-db
+    databaseName: gobarber
+    user: gobarber
+    plan: free
+
+services:
+  - type: redis
+    name: gobarber-redis
+    plan: free
+    maxmemoryPolicy: noeviction
+
+  - type: web
+    name: gobarber-api
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    preDeployCommand: npm run db:migrate
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gobarber-db
+          property: connectionString
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: gobarber-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: gobarber-redis
+          property: port
+      - key: REDIS_PASS
+        fromService:
+          type: redis
+          name: gobarber-redis
+          property: password
+      - key: APP_SECRET
+        generateValue: true
+      - key: STORAGE_DRIVER
+        value: disk
+      - key: MAIL_DRIVER
+        value: ethereal
+      - key: APP_API_URL
+        sync: false
+      - key: APP_WEB_URL
+        sync: false

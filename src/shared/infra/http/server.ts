@@ -8,8 +8,9 @@ import '@shared/container';
 async function start(): Promise<void> {
   const app = await setup();
 
-  await app.listen({ port: 3333, host: '0.0.0.0' });
-  console.log('Server started on port 3333!');
+  const port = Number(process.env.PORT) || 3333;
+  await app.listen({ port, host: '0.0.0.0' });
+  console.log(`Server started on port ${port}!`);
 }
 
 start();
