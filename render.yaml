@@ -9,14 +9,14 @@ services:
     name: gobarber-redis
     plan: free
     maxmemoryPolicy: noeviction
+    ipAllowList: []
 
   - type: web
     name: gobarber-api
     env: node
     plan: free
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && npm run build && npm run db:migrate
     startCommand: npm start
-    preDeployCommand: npm run db:migrate
     envVars:
       - key: NODE_ENV
         value: production
@@ -34,11 +34,6 @@ services:
           type: redis
           name: gobarber-redis
           property: port
-      - key: REDIS_PASS
-        fromService:
-          type: redis
-          name: gobarber-redis
-          property: password
       - key: APP_SECRET
         generateValue: true
       - key: STORAGE_DRIVER
